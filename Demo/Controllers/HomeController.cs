@@ -22,19 +22,19 @@ namespace Demo.Controllers
     {
         public string constr = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
 
-        private static Lazy<ConnectionMultiplexer> lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
-        {
-            string cacheConnection = ConfigurationManager.AppSettings["CacheConnection"].ToString();
-            return ConnectionMultiplexer.Connect(cacheConnection);
-        });
+        //private static Lazy<ConnectionMultiplexer> lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
+        //{
+        //    string cacheConnection = ConfigurationManager.AppSettings["CacheConnection"].ToString();
+        //    return ConnectionMultiplexer.Connect(cacheConnection);
+        //});
 
-        public static ConnectionMultiplexer Connection
-        {
-            get
-            {
-                return lazyConnection.Value;
-            }
-        }
+        //public static ConnectionMultiplexer Connection
+        //{
+        //    get
+        //    {
+        //        return lazyConnection.Value;
+        //    }
+        //}
 
         public MySqlConnection CreateConnection()
         {
@@ -42,46 +42,46 @@ namespace Demo.Controllers
             return con;
         }
 
-        public List<Product> GetFromList()
-        {
-            List<Product> product = null;
+        //public List<Product> GetFromList()
+        //{
+        //    List<Product> product = null;
 
-            IDatabase cache = Connection.GetDatabase();
-            string serializedTeams = cache.StringGet("products");
-            if (!String.IsNullOrEmpty(serializedTeams))
-            {
-                product = JsonConvert.DeserializeObject<List<Product>>(serializedTeams);
+        //    IDatabase cache = Connection.GetDatabase();
+        //    string serializedTeams = cache.StringGet("products");
+        //    if (!String.IsNullOrEmpty(serializedTeams))
+        //    {
+        //        product = JsonConvert.DeserializeObject<List<Product>>(serializedTeams);
 
-                ViewBag.msg += "List read from cache. ";
-            }
-            else
-            {
-                ViewBag.msg += "Teams list cache miss. ";
-                // Get from database and store in cache
-                product = GetData();
+        //        ViewBag.msg += "List read from cache. ";
+        //    }
+        //    else
+        //    {
+        //        ViewBag.msg += "Teams list cache miss. ";
+        //        // Get from database and store in cache
+        //        product = GetData();
 
-                ViewBag.msg += "Storing results to cache. ";
-                cache.StringSet("products", JsonConvert.SerializeObject(product));
-            }
+        //        ViewBag.msg += "Storing results to cache. ";
+        //        cache.StringSet("products", JsonConvert.SerializeObject(product));
+        //    }
 
-            return product;
-        }
+        //    return product;
+        //}
 
-        public ActionResult Counter()
-        {
-            var cacheKey = "product";
-            var host = ConfigurationManager.AppSettings["host"].ToString();
-            var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
-            RedisEndpoint redisEndpoint = new RedisEndpoint(host, port);
-            List<Product> lst = GetData();
+        //public ActionResult Counter()
+        //{
+        //    var cacheKey = "product";
+        //    var host = ConfigurationManager.AppSettings["host"].ToString();
+        //    var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
+        //    RedisEndpoint redisEndpoint = new RedisEndpoint(host, port);
+        //    List<Product> lst = GetData();
 
-            using (var client = new RedisClient(redisEndpoint))
-            {
-                ViewBag.Visit = client.Increment(cacheKey, 3);
-            }
+        //    using (var client = new RedisClient(redisEndpoint))
+        //    {
+        //        ViewBag.Visit = client.Increment(cacheKey, 3);
+        //    }
 
-            return View();
-        }
+        //    return View();
+        //}
 
         //Hàm lấy dữ liệu từ bản product trên mysql
         public List<Product> GetData()
@@ -124,44 +124,44 @@ namespace Demo.Controllers
             return View(data);
         }
 
-        public Queue<string> Insert_Queue(Product p, int length)
-        {
-            Queue<string> products = new Queue<string>();
-            string query = "insert into product (title, status, created_at, updated_at, price, derection)" +
-            " values";
+        //public Queue<string> Insert_Queue(Product p, int length)
+        //{
+        //    Queue<string> products = new Queue<string>();
+        //    string query = "insert into product (title, status, created_at, updated_at, price, derection)" +
+        //    " values";
 
-            string created_at = p.Created_at.ToString("yyyy-MM-dd hh:mm:ss");
-            string updated_at = p.Updated_at.ToString("yyyy-MM-dd hh:mm:ss");
-            for (int i = 0; i < length; i++)
-            {
-                products.Enqueue(query + String.Format("(\"{0}\",{1}, '{2}', '{3}', {4}, \"{5}\")"
-                , p.Name + i, p.Status, created_at, updated_at, p.Price + i, p.Derection));
-            }
-            return products;
-        }
+        //    string created_at = p.Created_at.ToString("yyyy-MM-dd hh:mm:ss");
+        //    string updated_at = p.Updated_at.ToString("yyyy-MM-dd hh:mm:ss");
+        //    for (int i = 0; i < length; i++)
+        //    {
+        //        products.Enqueue(query + String.Format("(\"{0}\",{1}, '{2}', '{3}', {4}, \"{5}\")"
+        //        , p.Name + i, p.Status, created_at, updated_at, p.Price + i, p.Derection));
+        //    }
+        //    return products;
+        //}
 
-        public void Run_Queue(Product p, int len)
-        {
-            Queue<string> products = new Queue<string>();
+        //public void Run_Queue(Product p, int len)
+        //{
+        //    Queue<string> products = new Queue<string>();
 
-            Task.Run(() =>
-            {
-                products = Insert_Queue(p, len);
-                int length = products.Count;
-                for (int i = 0; i < length; i++)
-                {
-                    var conn = CreateConnection();
-                    conn.Open();
-                    string query = products.Peek();
-                    products.Dequeue();
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
+        //    Task.Run(() =>
+        //    {
+        //        products = Insert_Queue(p, len);
+        //        int length = products.Count;
+        //        for (int i = 0; i < length; i++)
+        //        {
+        //            var conn = CreateConnection();
+        //            conn.Open();
+        //            string query = products.Peek();
+        //            products.Dequeue();
+        //            MySqlCommand cmd = new MySqlCommand(query, conn);
 
-                    cmd.ExecuteNonQuery();
-                    cmd.Dispose();
-                    conn.Close();
-                }
-            });
-        }
+        //            cmd.ExecuteNonQuery();
+        //            cmd.Dispose();
+        //            conn.Close();
+        //        }
+        //    });
+        //}
 
         public ActionResult Create()
         {
@@ -240,7 +240,7 @@ namespace Demo.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult Detail(int? _id, Product p)
+        public void GetProductDetail(Product p)
         {
             var conn = CreateConnection();
             conn.Open();
@@ -263,6 +263,11 @@ namespace Demo.Controllers
             cmd.Dispose();
 
             conn.Close();
+        }
+
+        public ActionResult Detail(int? _id, Product p)
+        {
+            GetProductDetail(p);
             return View(p);
         }
 

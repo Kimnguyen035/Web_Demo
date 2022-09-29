@@ -241,7 +241,6 @@
     <Content Include="Views\Home\Detail.cshtml" />
     <Content Include="Views\Home\Delete.cshtml" />
     <Content Include="Views\Home\Update.cshtml" />
-    <Content Include="Views\Home\Counter.cshtml" />
     <Content Include="Views\Home\SentMail.cshtml" />
   </ItemGroup>
   <ItemGroup>
