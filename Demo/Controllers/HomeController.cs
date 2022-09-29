@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Mail;
 using System.IO;
-using System.Data;
 
 namespace Demo.Controllers
 {
@@ -37,18 +36,18 @@ namespace Demo.Controllers
             }
         }
 
-        //public MySqlConnection CreateConnection()
-        //{
-        //    var con = new MySqlConnection(constr);
-        //    return con;
-        //}
+        public MySqlConnection CreateConnection()
+        {
+            var con = new MySqlConnection(constr);
+            return con;
+        }
 
         public List<Product> GetFromList()
         {
             List<Product> product = null;
 
             IDatabase cache = Connection.GetDatabase();
-            string serializedTeams = cache.StringGet("product");
+            string serializedTeams = cache.StringGet("products");
             if (!String.IsNullOrEmpty(serializedTeams))
             {
                 product = JsonConvert.DeserializeObject<List<Product>>(serializedTeams);
@@ -62,7 +61,7 @@ namespace Demo.Controllers
                 product = GetData();
 
                 ViewBag.msg += "Storing results to cache. ";
-                cache.StringSet("product", JsonConvert.SerializeObject(product));
+                cache.StringSet("products", JsonConvert.SerializeObject(product));
             }
 
             return product;
@@ -79,17 +78,16 @@ namespace Demo.Controllers
             using (var client = new RedisClient(redisEndpoint))
             {
                 ViewBag.Visit = client.Increment(cacheKey, 3);
-                client.AddItemToList(cacheKey, "sfsa");
             }
 
             return View();
         }
 
-
+        //Hàm lấy dữ liệu từ bản product trên mysql
         public List<Product> GetData()
         {
             List<Product> list = new List<Product>();
-            MySqlConnection conn = new MySqlConnection(constr);
+            var conn = CreateConnection();
             conn.Open();
 
             string query = "select * from product";
@@ -152,7 +150,7 @@ namespace Demo.Controllers
                 int length = products.Count;
                 for (int i = 0; i < length; i++)
                 {
-                    MySqlConnection conn = new MySqlConnection(constr);
+                    var conn = CreateConnection();
                     conn.Open();
                     string query = products.Peek();
                     products.Dequeue();
@@ -173,11 +171,15 @@ namespace Demo.Controllers
         [HttpPost]
         public ActionResult Create(Product p)
         {
+            if (p.Created_at < DateTime.Now || p.Updated_at < DateTime.Now)
+            {
+                ViewBag.Message = "You need enter today or feature";
+            }
             try
             {
                 if (ModelState.IsValid)
                 {
-                    MySqlConnection conn = new MySqlConnection(constr);
+                    var conn = CreateConnection();
                     conn.Open();
                     string query = "insert into product (title, status, created_at, updated_at, price, derection)" +
                     " values(@_name,@_status,@_created_at,@_updated_at,@_price,@_derection)";
@@ -217,7 +219,7 @@ namespace Demo.Controllers
         [HttpPost]
         public ActionResult Update(Product p)
         {
-            MySqlConnection conn = new MySqlConnection(constr);
+            var conn = CreateConnection();
             conn.Open();
 
             string query = "update product set " +
@@ -240,7 +242,7 @@ namespace Demo.Controllers
 
         public ActionResult Detail(int? _id, Product p)
         {
-            MySqlConnection conn = new MySqlConnection(constr);
+            var conn = CreateConnection();
             conn.Open();
 
             MySqlCommand cmd = new MySqlCommand("select * from product where id = @_id", conn);
@@ -277,7 +279,7 @@ namespace Demo.Controllers
         [HttpPost]
         public ActionResult Delete(Product p)
         {
-            MySqlConnection conn = new MySqlConnection(constr);
+            var conn = CreateConnection();
             conn.Open();
             MySqlCommand cmd = new MySqlCommand("delete from product where id = @_id", conn);
 

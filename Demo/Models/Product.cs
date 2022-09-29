@@ -17,8 +17,10 @@ namespace Demo.Models
         [Range(0, 1, ErrorMessage = "You can only enter number 0 or number 1")]
         public int Status { get; set; }
         [Required]
+        [DataType(DataType.Date)]
         public DateTime Created_at { get; set; }
         [Required]
+        [DataType(DataType.Date)]
         public DateTime Updated_at { get; set; }
         [Required(ErrorMessage = "You need enter product price")]
         [Range(1, 999999, ErrorMessage = "You need to enter the price between 1 and 999,999")]
