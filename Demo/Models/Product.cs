@@ -25,8 +25,5 @@ namespace Demo.Models
         [Display(Name = "Product Price")]
         public double Price { get; set; }
         public string Derection { get; set; }
-        [Required]
-        [MinLength(1, ErrorMessage = "You need enter length > 0")]
-        public int len { get; set; }
     }
 }

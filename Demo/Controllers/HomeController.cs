@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Mail;
 using System.IO;
+using System.Data;
 
 namespace Demo.Controllers
 {
@@ -35,6 +36,12 @@ namespace Demo.Controllers
                 return lazyConnection.Value;
             }
         }
+
+        //public MySqlConnection CreateConnection()
+        //{
+        //    var con = new MySqlConnection(constr);
+        //    return con;
+        //}
 
         public List<Product> GetFromList()
         {
@@ -63,25 +70,19 @@ namespace Demo.Controllers
 
         public ActionResult Counter()
         {
-            //var cacheKey = "product";
-            //var host = ConfigurationManager.AppSettings["host"].ToString();
-            //var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
-            //RedisEndpoint redisEndpoint = new RedisEndpoint(host, port);
-            //List<Product> lst = GetData();
+            var cacheKey = "product";
+            var host = ConfigurationManager.AppSettings["host"].ToString();
+            var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
+            RedisEndpoint redisEndpoint = new RedisEndpoint(host, port);
+            List<Product> lst = GetData();
 
-            //using (var client = new RedisClient(redisEndpoint))
-            //{
-            //    ViewBag.Visit = client.Increment(cacheKey, 3);
-            //    client.AddItemToList(cacheKey, "sfsa");
-            //}
+            using (var client = new RedisClient(redisEndpoint))
+            {
+                ViewBag.Visit = client.Increment(cacheKey, 3);
+                client.AddItemToList(cacheKey, "sfsa");
+            }
 
             return View();
-        }
-        [HttpPost]
-        public ActionResult Counter(string txt)
-        {
-            ViewBag.Mess = txt;
-            return RedirectToAction("Index");
         }
 
 
@@ -118,8 +119,7 @@ namespace Demo.Controllers
 
         public ActionResult Index(int? pg)
         {
-            List<Product> lst = new List<Product>();
-            lst = GetData();
+            var lst = GetData();
 
             var data = lst.ToList().ToPagedList(pg ?? 1, 3);
 
@@ -142,6 +142,28 @@ namespace Demo.Controllers
             return products;
         }
 
+        public void Run_Queue(Product p, int len)
+        {
+            Queue<string> products = new Queue<string>();
+
+            Task.Run(() =>
+            {
+                products = Insert_Queue(p, len);
+                int length = products.Count;
+                for (int i = 0; i < length; i++)
+                {
+                    MySqlConnection conn = new MySqlConnection(constr);
+                    conn.Open();
+                    string query = products.Peek();
+                    products.Dequeue();
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
+                    conn.Close();
+                }
+            });
+        }
 
         public ActionResult Create()
         {
@@ -155,46 +177,29 @@ namespace Demo.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    //MySqlConnection conn = new MySqlConnection(constr);
-                    //conn.Open();
-                    //string query = "insert into product (title, status, created_at, updated_at, price, derection)" +
-                    //" values(@_name,@_status,@_created_at,@_updated_at,@_price,@_derection)";
-                    //MySqlCommand cmd = new MySqlCommand(query, conn);
+                    MySqlConnection conn = new MySqlConnection(constr);
+                    conn.Open();
+                    string query = "insert into product (title, status, created_at, updated_at, price, derection)" +
+                    " values(@_name,@_status,@_created_at,@_updated_at,@_price,@_derection)";
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
 
-                    //string created_at = p.Created_at.ToString("yyyy-MM-dd hh:mm:ss");
-                    //string updated_at = p.Updated_at.ToString("yyyy-MM-dd hh:mm:ss");
+                    string created_at = p.Created_at.ToString("yyyy-MM-dd hh:mm:ss");
+                    string updated_at = p.Updated_at.ToString("yyyy-MM-dd hh:mm:ss");
 
-                    //cmd.Parameters.AddWithValue("@_name", p.Name);
-                    //cmd.Parameters.AddWithValue("@_status", p.Status);
-                    //cmd.Parameters.AddWithValue("@_created_at", created_at);
-                    //cmd.Parameters.AddWithValue("@_updated_at", updated_at);
-                    //cmd.Parameters.AddWithValue("@_price", p.Price);
-                    //cmd.Parameters.AddWithValue("@_derection", p.Derection);
+                    cmd.Parameters.AddWithValue("@_name", p.Name);
+                    cmd.Parameters.AddWithValue("@_status", p.Status);
+                    cmd.Parameters.AddWithValue("@_created_at", created_at);
+                    cmd.Parameters.AddWithValue("@_updated_at", updated_at);
+                    cmd.Parameters.AddWithValue("@_price", p.Price);
+                    cmd.Parameters.AddWithValue("@_derection", p.Derection);
 
-                    //cmd.ExecuteNonQuery();
-                    //cmd.Dispose();
-                    //conn.Close();
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
+                    conn.Close();
 
-                    Queue<string> products = new Queue<string>();
-
-                    Task.Run(() =>
-                    {
-                        products = Insert_Queue(p, p.len);
-                        int length = p.len;
-                        for (int i = 0; i < length; i++)
-                        {
-                            MySqlConnection conn = new MySqlConnection(constr);
-                            conn.Open();
-                            string query = products.Peek();
-                            products.Dequeue();
-                            MySqlCommand cmd = new MySqlCommand(query, conn);
-
-                            cmd.ExecuteNonQuery();
-                            cmd.Dispose();
-                            conn.Close();
-                        }
-                    });
-                    return RedirectToAction("Index");
+                    //Run_Queue(p);
+                    
+                    return RedirectToAction("Index", "Home");
                 }
                 return View(p);
             }
@@ -230,7 +235,7 @@ namespace Demo.Controllers
             cmd.ExecuteNonQuery();
             cmd.Dispose();
             conn.Close();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult Detail(int? _id, Product p)
@@ -280,7 +285,7 @@ namespace Demo.Controllers
             cmd.ExecuteNonQuery();
             cmd.Dispose();
             conn.Close();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult SentMail()
@@ -290,13 +295,13 @@ namespace Demo.Controllers
         [HttpPost]
         public ActionResult SentMail(PNC_Mail m)
         {
-            string MailServer = ConfigurationManager.AppSettings["MailServer"];
+            string MailServer = ConfigurationManager.AppSettings["MailServer"].ToString();
             int Mailport = Convert.ToInt32(ConfigurationManager.AppSettings["Mailport"]);
-            string MailPNC = ConfigurationManager.AppSettings["MailPNC"];
-            string PassworkMailPNC = ConfigurationManager.AppSettings["PassworkMailPNC"];
+            string MailPNC = ConfigurationManager.AppSettings["MailPNC"].ToString();
+            string PassworkMailPNC = ConfigurationManager.AppSettings["PassworkMailPNC"].ToString();
             try
             {
-                using (MailMessage mail = new MailMessage(MailPNC, m.Receiver))
+                using (var mail = new MailMessage(MailPNC, m.Receiver))
                 {
                     mail.Subject = m.Subject;
                     mail.Body = m.Body;
@@ -317,11 +322,11 @@ namespace Demo.Controllers
                         smtp.Send(mail);
                     }
                 }
-                ViewBag.Message = "Email sent";
+                ViewBag.Message = "Send mail sucessfully";
             }
             catch
             {
-                ViewBag.Error = "Can not sent mail";
+                ViewBag.Error = "Send mail failled";
             }
 
             return View();

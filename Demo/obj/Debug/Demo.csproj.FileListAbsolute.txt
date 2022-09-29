@@ -49,7 +49,6 @@ C:\Users\ASUS\Desktop\Demo\Demo\bin\System.Web.WebPages.Razor.xml
 C:\Users\ASUS\Desktop\Demo\Demo\bin\Newtonsoft.Json.xml
 C:\Users\ASUS\Desktop\Demo\Demo\bin\Antlr3.Runtime.pdb
 C:\Users\ASUS\Desktop\Demo\Demo\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\ASUS\Desktop\Demo\Demo\obj\Debug\Demo.csprojAssemblyReference.cache
 C:\Users\ASUS\Desktop\Demo\Demo\obj\Debug\Demo.csproj.CoreCompileInputs.cache
 C:\Users\ASUS\Desktop\Demo\Demo\obj\Debug\Demo.csproj.CopyComplete
 C:\Users\ASUS\Desktop\Demo\Demo\obj\Debug\Demo.dll
@@ -88,3 +87,13 @@ C:\Users\ASUS\Desktop\Demo\Demo\bin\StackExchange.Redis.xml
 C:\Users\ASUS\Desktop\Demo\Demo\bin\System.Buffers.xml
 C:\Users\ASUS\Desktop\Demo\Demo\bin\System.Memory.xml
 C:\Users\ASUS\Desktop\Demo\Demo\bin\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\ASUS\Desktop\Demo\Demo\bin\Common.Logging.Core.dll
+C:\Users\ASUS\Desktop\Demo\Demo\bin\Common.Logging.dll
+C:\Users\ASUS\Desktop\Demo\Demo\bin\Quartz.dll
+C:\Users\ASUS\Desktop\Demo\Demo\bin\Common.Logging.pdb
+C:\Users\ASUS\Desktop\Demo\Demo\bin\Common.Logging.xml
+C:\Users\ASUS\Desktop\Demo\Demo\bin\Common.Logging.Core.pdb
+C:\Users\ASUS\Desktop\Demo\Demo\bin\Common.Logging.Core.xml
+C:\Users\ASUS\Desktop\Demo\Demo\bin\Quartz.pdb
+C:\Users\ASUS\Desktop\Demo\Demo\bin\Quartz.xml
+C:\Users\ASUS\Desktop\Demo\Demo\obj\Debug\Demo.csprojAssemblyReference.cache
