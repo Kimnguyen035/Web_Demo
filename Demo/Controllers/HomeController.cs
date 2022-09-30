@@ -83,7 +83,7 @@ namespace Demo.Controllers
         //    return View();
         //}
 
-        //Hàm lấy dữ liệu từ bản product trên mysql
+        
         public List<Product> GetData()
         {
             List<Product> list = new List<Product>();
@@ -123,45 +123,6 @@ namespace Demo.Controllers
 
             return View(data);
         }
-
-        //public Queue<string> Insert_Queue(Product p, int length)
-        //{
-        //    Queue<string> products = new Queue<string>();
-        //    string query = "insert into product (title, status, created_at, updated_at, price, direction)" +
-        //    " values";
-
-        //    string created_at = p.Created_at.ToString("yyyy-MM-dd hh:mm:ss");
-        //    string updated_at = p.Updated_at.ToString("yyyy-MM-dd hh:mm:ss");
-        //    for (int i = 0; i < length; i++)
-        //    {
-        //        products.Enqueue(query + String.Format("(\"{0}\",{1}, '{2}', '{3}', {4}, \"{5}\")"
-        //        , p.Name + i, p.Status, created_at, updated_at, p.Price + i, p.direction));
-        //    }
-        //    return products;
-        //}
-
-        //public void Run_Queue(Product p, int len)
-        //{
-        //    Queue<string> products = new Queue<string>();
-
-        //    Task.Run(() =>
-        //    {
-        //        products = Insert_Queue(p, len);
-        //        int length = products.Count;
-        //        for (int i = 0; i < length; i++)
-        //        {
-        //            var conn = CreateConnection();
-        //            conn.Open();
-        //            string query = products.Peek();
-        //            products.Dequeue();
-        //            MySqlCommand cmd = new MySqlCommand(query, conn);
-
-        //            cmd.ExecuteNonQuery();
-        //            cmd.Dispose();
-        //            conn.Close();
-        //        }
-        //    });
-        //}
 
         public ActionResult Create()
         {
