@@ -17,7 +17,7 @@ namespace Demo.Models
             int Mailport = Convert.ToInt32(ConfigurationManager.AppSettings["Mailport"]);
             string MailPNC = ConfigurationManager.AppSettings["MailPNC"];
             string PassworkMailPNC = ConfigurationManager.AppSettings["PassworkMailPNC"];
-            using (var mail = new MailMessage(MailPNC, "kimnguyen035171@gmail.com"))
+            using (var mail = new MailMessage(MailPNC, "anph13@fpt.com.vn"))
             {
                 mail.Subject = "Phuong Nam Telecom";
                 mail.Body = "Hello, Today: " + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss");

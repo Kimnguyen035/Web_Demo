@@ -15,21 +15,21 @@ namespace Demo.Models
             scheduler.Start();
             IJobDetail job = JobBuilder.Create<EmailJob>().Build();
 
-            ITrigger trigger = TriggerBuilder.Create()
-                .WithDailyTimeIntervalSchedule
-                  (
-                    s => s.WithIntervalInHours(24)
-                    .OnEveryDay()
-                    .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(0, 0))
-                  )
-                .Build();
+            //ITrigger trigger = TriggerBuilder.Create()
+            //.WithDailyTimeIntervalSchedule
+            //  (
+            //    s => s.WithIntervalInHours(24)
+            //    .OnEveryDay()
+            //    .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(8, 49))
+            //  )
+            //.Build();
             //.WithIdentity("trigger7", "group1")
             //.WithSimpleSchedule(x => x
             //.WithIntervalInMinutes(1)
             //.RepeatForever())
-            //.EndAt(DateBuilder.DateOf(15, 20, 0))
+            //.EndAt(DateBuilder.DateOf(8, 51, 0))
             //.Build();
-            scheduler.ScheduleJob(job, trigger);
+            //scheduler.ScheduleJob(job, trigger);
         }
     }
 }

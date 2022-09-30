@@ -105,7 +105,7 @@ namespace Demo.Controllers
                         Created_at = Convert.ToDateTime(rd["created_at"]),
                         Updated_at = Convert.ToDateTime(rd["updated_at"]),
                         Price = Convert.ToDouble(rd["price"]),
-                        Derection = Convert.ToString(rd["derection"])
+                        Direction = Convert.ToString(rd["direction"])
                     });
                 }
             }
@@ -127,7 +127,7 @@ namespace Demo.Controllers
         //public Queue<string> Insert_Queue(Product p, int length)
         //{
         //    Queue<string> products = new Queue<string>();
-        //    string query = "insert into product (title, status, created_at, updated_at, price, derection)" +
+        //    string query = "insert into product (title, status, created_at, updated_at, price, direction)" +
         //    " values";
 
         //    string created_at = p.Created_at.ToString("yyyy-MM-dd hh:mm:ss");
@@ -135,7 +135,7 @@ namespace Demo.Controllers
         //    for (int i = 0; i < length; i++)
         //    {
         //        products.Enqueue(query + String.Format("(\"{0}\",{1}, '{2}', '{3}', {4}, \"{5}\")"
-        //        , p.Name + i, p.Status, created_at, updated_at, p.Price + i, p.Derection));
+        //        , p.Name + i, p.Status, created_at, updated_at, p.Price + i, p.direction));
         //    }
         //    return products;
         //}
@@ -181,8 +181,8 @@ namespace Demo.Controllers
                 {
                     var conn = CreateConnection();
                     conn.Open();
-                    string query = "insert into product (title, status, created_at, updated_at, price, derection)" +
-                    " values(@_name,@_status,@_created_at,@_updated_at,@_price,@_derection)";
+                    string query = "insert into product (title, status, created_at, updated_at, price, direction)" +
+                    " values(@_name,@_status,@_created_at,@_updated_at,@_price,@_direction)";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
 
                     string created_at = p.Created_at.ToString("yyyy-MM-dd hh:mm:ss");
@@ -193,7 +193,7 @@ namespace Demo.Controllers
                     cmd.Parameters.AddWithValue("@_created_at", created_at);
                     cmd.Parameters.AddWithValue("@_updated_at", updated_at);
                     cmd.Parameters.AddWithValue("@_price", p.Price);
-                    cmd.Parameters.AddWithValue("@_derection", p.Derection);
+                    cmd.Parameters.AddWithValue("@_direction", p.Direction);
 
                     cmd.ExecuteNonQuery();
                     cmd.Dispose();
@@ -223,7 +223,7 @@ namespace Demo.Controllers
             conn.Open();
 
             string query = "update product set " +
-            "title=@_name,status=@_status,created_at=@_created_at,updated_at=@_updated_at,price=@_price,derection=@_derection " +
+            "title=@_name,status=@_status,created_at=@_created_at,updated_at=@_updated_at,price=@_price,direction=@_direction " +
             "where id=@_id";
             MySqlCommand cmd = new MySqlCommand(query, conn);
 
@@ -232,7 +232,7 @@ namespace Demo.Controllers
             cmd.Parameters.AddWithValue("@_created_at", p.Created_at);
             cmd.Parameters.AddWithValue("@_updated_at", p.Updated_at);
             cmd.Parameters.AddWithValue("@_price", p.Price);
-            cmd.Parameters.AddWithValue("@_derection", p.Derection);
+            cmd.Parameters.AddWithValue("@_direction", p.Direction);
             cmd.Parameters.AddWithValue("@_id", p.ID);
             cmd.ExecuteNonQuery();
             cmd.Dispose();
@@ -257,7 +257,7 @@ namespace Demo.Controllers
                     p.Created_at = Convert.ToDateTime(rd["created_at"]);
                     p.Updated_at = Convert.ToDateTime(rd["updated_at"]);
                     p.Price = Convert.ToDouble(rd["price"]);
-                    p.Derection = Convert.ToString(rd["derection"]);
+                    p.Direction = Convert.ToString(rd["direction"]);
                 }
             }
             cmd.Dispose();

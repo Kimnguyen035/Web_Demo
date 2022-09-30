@@ -26,6 +26,6 @@ namespace Demo.Models
         [Range(1, 999999, ErrorMessage = "You need to enter the price between 1 and 999,999")]
         [Display(Name = "Product Price")]
         public double Price { get; set; }
-        public string Derection { get; set; }
+        public string Direction { get; set; }
     }
 }
