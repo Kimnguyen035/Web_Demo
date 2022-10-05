@@ -176,7 +176,6 @@ namespace Demo.Controllers
 
         public ActionResult Index(int? pg)
         {
-            //var lProduct = GetData();
             var list = GetProduct();
 
             var data = list.ToList().ToPagedList(pg ?? 1, 3);
@@ -192,10 +191,6 @@ namespace Demo.Controllers
         [HttpPost]
         public ActionResult Create(Product p)
         {
-            if (p.Created_at < DateTime.Now || p.Updated_at < DateTime.Now)
-            {
-                ViewBag.Message = "You need enter today or feature";
-            }
             try
             {
                 if (ModelState.IsValid)
@@ -219,8 +214,6 @@ namespace Demo.Controllers
                     cmd.ExecuteNonQuery();
                     cmd.Dispose();
                     conn.Close();
-
-                    //Run_Queue(p);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -312,7 +305,6 @@ namespace Demo.Controllers
 
         public ActionResult Delete(int id, Product p)
         {
-            //Product p = new Product();
             GetProductDetail(p);
             return View(p);
         }
@@ -328,50 +320,6 @@ namespace Demo.Controllers
             cmd.Dispose();
             conn.Close();
             return RedirectToAction("Index", "Home");
-        }
-
-        public ActionResult SentMail()
-        {
-            return View();
-        }
-        [HttpPost]
-        public ActionResult SentMail(PNC_Mail m)
-        {
-            string MailServer = ConfigurationManager.AppSettings["MailServer"].ToString();
-            int Mailport = Convert.ToInt32(ConfigurationManager.AppSettings["Mailport"]);
-            string MailPNC = ConfigurationManager.AppSettings["MailPNC"].ToString();
-            string PassworkMailPNC = ConfigurationManager.AppSettings["PassworkMailPNC"].ToString();
-            try
-            {
-                using (var mail = new MailMessage(MailPNC, m.Receiver))
-                {
-                    mail.Subject = m.Subject;
-                    mail.Body = m.Body;
-                    //if (m.Attachment != null)
-                    //{
-                    //    string file_name = Path.GetFileName(m.Attachment.FileName);
-                    //    mail.Attachments.Add(new Attachment(m.Attachment.InputStream, file_name));
-                    //}
-                    mail.IsBodyHtml = false;
-                    using (SmtpClient smtp = new SmtpClient())
-                    {
-                        smtp.Host = MailServer;
-                        smtp.EnableSsl = true;
-                        NetworkCredential _networkCredential = new NetworkCredential(MailPNC, PassworkMailPNC);
-                        smtp.UseDefaultCredentials = true;
-                        smtp.Credentials = _networkCredential;
-                        smtp.Port = Mailport;
-                        smtp.Send(mail);
-                    }
-                }
-                ViewBag.Message = "Send mail sucessfully";
-            }
-            catch
-            {
-                ViewBag.Error = "Send mail failled";
-            }
-
-            return View();
         }
     }
 }
