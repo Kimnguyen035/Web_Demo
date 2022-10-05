@@ -23,9 +23,18 @@ namespace Demo.Models
         [DataType(DataType.Date)]
         public DateTime Updated_at { get; set; }
         [Required(ErrorMessage = "You need enter product price")]
-        [Range(1, 999999, ErrorMessage = "You need to enter the price between 1 and 999,999")]
+        [Range(1, double.MaxValue, ErrorMessage = "You need to enter the price between 1 and 999,999")]
         [Display(Name = "Product Price")]
         public double Price { get; set; }
         public string Direction { get; set; }
+
+        public List<Image> image { get; set; }
+    }
+
+    public class Image
+    {
+        public int ID { get; set; }
+        public string Link { get; set; }
+        public int Product_id { get; set; }
     }
 }

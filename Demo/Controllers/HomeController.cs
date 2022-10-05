@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Mail;
 using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace Demo.Controllers
 {
@@ -83,7 +84,33 @@ namespace Demo.Controllers
         //    return View();
         //}
 
-        
+        public List<Image> GetAllImages()
+        {
+            List<Image> list = new List<Image>();
+            var conn = CreateConnection();
+            conn.Open();
+            string query = "select * from image";
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+
+            using (var rd = cmd.ExecuteReader())
+            {
+                while (rd.Read())
+                {
+                    list.Add(new Image
+                    {
+                        ID = Convert.ToInt32(rd["id"]),
+                        Link = Convert.ToString(rd["link"]),
+                        Product_id = Convert.ToInt32(rd["product_id"])
+                    });
+                }
+            }
+            cmd.Dispose();
+            conn.Close();
+
+            return list;
+        }
+
+
         public List<Product> GetData()
         {
             List<Product> list = new List<Product>();
@@ -97,7 +124,8 @@ namespace Demo.Controllers
             {
                 while (rd.Read())
                 {
-                    list.Add(new Product()
+
+                    list.Add(new Product
                     {
                         ID = Convert.ToInt32(rd["id"]),
                         Name = Convert.ToString(rd["title"]),
@@ -115,11 +143,43 @@ namespace Demo.Controllers
             return list;
         }
 
+        public List<Product> GetProduct()
+        {
+            var lProduct = GetData();
+            var lImage = GetAllImages();
+            int length = lImage.Count;
+            int i = 0, j = 0;
+            while (i < length)
+            {
+                if (lImage[i].Product_id == lProduct[j].ID)
+                {
+                    if (lProduct[j].image == null)
+                    {
+                        lProduct[j].image = new List<Image>();
+                    }
+                    lProduct[j].image.Add(lImage[i]);
+                }
+                else
+                {
+                    j++;
+                    if (lProduct[j].image == null)
+                    {
+                        lProduct[j].image = new List<Image>();
+                    }
+                    lProduct[j].image.Add(lImage[i]);
+                }
+                i++;
+            }
+
+            return lProduct;
+        }
+
         public ActionResult Index(int? pg)
         {
-            var lst = GetData();
+            //var lProduct = GetData();
+            var list = GetProduct();
 
-            var data = lst.ToList().ToPagedList(pg ?? 1, 3);
+            var data = list.ToList().ToPagedList(pg ?? 1, 3);
 
             return View(data);
         }
@@ -161,7 +221,7 @@ namespace Demo.Controllers
                     conn.Close();
 
                     //Run_Queue(p);
-                    
+
                     return RedirectToAction("Index", "Home");
                 }
                 return View(p);
@@ -203,6 +263,8 @@ namespace Demo.Controllers
 
         public void GetProductDetail(Product p)
         {
+            var listImg = GetAllImages();
+            int i = 0, length = listImg.Count;
             var conn = CreateConnection();
             conn.Open();
 
@@ -219,6 +281,22 @@ namespace Demo.Controllers
                     p.Updated_at = Convert.ToDateTime(rd["updated_at"]);
                     p.Price = Convert.ToDouble(rd["price"]);
                     p.Direction = Convert.ToString(rd["direction"]);
+                    while (i < length)
+                    {
+                        if (listImg[i].Product_id == p.ID && p.image == null)
+                        {
+                            p.image = new List<Image>();
+                        }
+                        if (listImg[i].Product_id == p.ID)
+                        {
+                            p.image.Add(listImg[i]);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        i++;
+                    }
                 }
             }
             cmd.Dispose();
@@ -232,15 +310,11 @@ namespace Demo.Controllers
             return View(p);
         }
 
-        public ActionResult RecycleBin()
+        public ActionResult Delete(int id, Product p)
         {
-
-            return View();
-        }
-
-        public ActionResult Delete(int id)
-        {
-            return View();
+            //Product p = new Product();
+            GetProductDetail(p);
+            return View(p);
         }
         [HttpPost]
         public ActionResult Delete(Product p)

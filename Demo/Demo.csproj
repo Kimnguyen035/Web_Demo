@@ -196,6 +196,7 @@
     </Compile>
     <Compile Include="Models\EmailJob.cs" />
     <Compile Include="Models\JobSendMail.cs" />
+    <Compile Include="Models\MailModel.cs" />
     <Compile Include="Models\PNC_Mail.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -244,6 +245,7 @@
     <Content Include="Views\Home\Update.cshtml" />
     <Content Include="Views\Home\SentMail.cshtml" />
     <Content Include="Views\TaskQueue\Action_Queue.cshtml" />
+    <Content Include="Views\Shared\Footer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

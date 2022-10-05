@@ -7,69 +7,162 @@
 
 <h2>Detail</h2>
 
+
+@*else
+    {
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu2jIP0U5hChQm-vP8D0zvhbh5J0IIKPD2rA&usqp=CAU" />
+    }*@
+
 <div>
     <h4>Product</h4>
+
+
+
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ID)
-        </dt>
+    <table>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
+            <th></th>
+        </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.ID)
-        </dd>
+        <tr>
+            <td>
+                @if (Model.image != null)
+                {
+                    <img src="@Model.image[0].Link" style="width:100px" />
+                }
+                else
+                {
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu2jIP0U5hChQm-vP8D0zvhbh5J0IIKPD2rA&usqp=CAU" style="width:200px; height:150px" />
+                }
+            </td>
+            <td>
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ID)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.ID)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Status)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Created_at)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Status)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Created_at)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Created_at)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Updated_at)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Created_at)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Updated_at)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Updated_at)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Updated_at)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Price)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Price)
+                    </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Direction)
-        </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Price)
+                    </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Direction)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Direction)
+                    </dt>
 
-    </dl>
+                    <dd>
+                        @Html.DisplayFor(model => model.Direction)
+                    </dd>
+
+                </dl>
+            </td>
+        </tr>
+    </table>
+
+    @*<dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.ID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Status)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Created_at)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Created_at)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Updated_at)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Updated_at)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Price)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Price)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Direction)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Direction)
+            </dd>
+
+        </dl>*@
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @*@Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |*@
     @Html.ActionLink("Back to List", "Index")
 </p>

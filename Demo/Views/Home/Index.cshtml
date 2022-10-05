@@ -7,10 +7,13 @@
 @using PagedList.Mvc;
 @using PagedList;
 
-<h2 style="align-content:center">Product</h2> @ViewBag.Mess
+<h2 style="align-content:center">Product</h2>
 
 <table class="table">
     <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.First().image)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.First().ID)
         </th>
@@ -38,6 +41,22 @@
     @foreach (var item in Model)
     {
         <tr>
+            @if (item.image != null)
+            {
+                for (int i = 0; i < item.image.Count; i++)
+                {
+                    <td>
+                        <img src="@item.image[i].Link" style="height:50px; width:50px" />
+                    </td>
+                    break;
+                }
+            }
+            else
+            {
+                <td>
+                    <img style="height:50px; width:50px" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu2jIP0U5hChQm-vP8D0zvhbh5J0IIKPD2rA&usqp=CAU" />
+                </td>
+            }
             <td>
                 @Html.DisplayFor(modelItem => item.ID)
             </td>

@@ -74,9 +74,9 @@ namespace Demo.Controllers
         }
 
         [HttpPost]
-        public ActionResult Action_Queue(int len, Product p)
+        public ActionResult Action_Queue(int length, Product p)
         {
-            Run_Queue(p, len);
+            Run_Queue(p, length);
             return RedirectToAction("Index", "Home");
         }
     }
